@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 /**
  * This class handles the view of the Special vending machine
  */
-public class SpecialGui {
+public class SpecialGui extends RegularView{
 
     JFrame frame;
     JButton pButton[];
@@ -364,6 +364,17 @@ public class SpecialGui {
     public int getBuyList(int i)
     {
         return buyList[i];
+    }
+
+    /**
+     * This updates the information(name qnty price kcal) Jlabel about a certain product
+     */
+    public void updateInfoLabel(ItemHandler itemHandler)
+    {
+        for (int i = 0; i < 12; i++) {
+            setInfoLabel(i, itemHandler.getItemRecord().get(i).getName(), itemHandler.getWholeItemArrayList().get(i).size()
+            , itemHandler.getItemRecord().get(i).getCalories(), itemHandler.getItemRecord().get(i).getPrice());
+        }
     }
 
     /**

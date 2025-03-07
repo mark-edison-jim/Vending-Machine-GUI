@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -14,6 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import Items.Item;
+
+import javax.swing.Timer;
 /*
  * This class handles the data and components/GUI of the features of the VM
  */
@@ -144,6 +148,59 @@ public class RegularView {
 		this.regVendFrame.setResizable(false);
 	}
 	
+	public void assignItemBtnFunctions(ItemHandler itemHandler, TransactionHandler transacHandler, Maintenance maintenance, int i){
+		disableBackBtn();
+		disableDispenseChangeBtn();
+		coverItems();
+		coverDenominations();
+		showItemDetailComponents();
+		
+		displayItemDetails(itemHandler.getSingleItemArrayList(i), itemHandler.getItemRecord().get(i));
+		
+		changeItemConfirmBtnActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(i==12) {
+					for(int j=0; j<itemHandler.getNumItems(); j++) {
+						if(itemHandler.getSingleItemArrayList(j).size()-1==0 && j!=10 && j!=11)
+							disableBtn(j);
+						itemHandler.removeItem(j);
+						transacHandler.addTransaction(itemHandler.getItemRecord().get(j), maintenance.getTimesRestocked());
+					}
+				}
+				else {
+					if(itemHandler.getSingleItemArrayList(i).size()-1==0)
+						disableBtn(i);
+						itemHandler.removeItem(i);
+					transacHandler.addTransaction(itemHandler.getItemRecord().get(i), maintenance.getTimesRestocked());
+				}
+				initiateItemLabels(itemHandler.getWholeItemArrayList(), itemHandler.getItemRecord());
+				hideItemDetailComponents();
+				showIdleTextLabel(getTotalCashInserted()-itemHandler.getItemRecord().get(i).getPrice(), itemHandler.getItemRecord().get(i).getName());
+				
+				ActionListener listener = new ActionListener(){
+					public void actionPerformed(ActionEvent event){
+						transacHandler.addEarnings(i, itemHandler);
+						enableBackBtn();
+						enableDispenseChangeBtn();
+						removeItemsCover();
+						removeDenominationsCover();
+						setTotalCashInserted(0);
+						displayAmountLabelText();
+						transacHandler.updateChangeStock();
+						resetDisplayItemDetails();
+						getItemsConfirmPanel().setVisible(false);
+						hideIdleTextLabel();
+						transacHandler.displayChangeStock();
+					}
+				};
+				Timer timer = new Timer(2000, listener);
+				timer.setRepeats(false);
+				timer.start();
+			}
+		});
+	}
+
 	/**
 	 * Assigns an action to the button for dispensing change
 	 * @param actionListener
@@ -296,6 +353,44 @@ public class RegularView {
 		itemDetailLabels[3].setText(String.format("Cal.: %d", itemRecord.getCalories()));
 	}
 	
+	public void initiateRegVendViewActionListeners(MainMenu menu, TransactionHandler transacHandler, ItemHandler itemHandler) {
+		this.setBackButtonActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setTotalCashInserted(0);
+				displayAmountLabelText();
+				//vendModel.revertChangeStock();
+				//vendModel.resetTempNewHoldingChangeStock();
+				hideRegVend();
+				menu.revealMainMenu();
+			}
+		});
+		
+		this.setDispenseChangeBtnActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setTotalCashInserted(0);
+				displayAmountLabelText();
+				//vendModel.revertChangeStock();
+				//vendModel.resetTempNewHoldingChangeStock();
+				transacHandler.displayChangeStock();
+				//vendModel.displayTempNewHoldingChangeStock();
+			}
+		});
+		
+		this.setItemCancelBtnActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				enableBackBtn();
+				enableDispenseChangeBtn();
+				removeItemsCover();
+				removeDenominationsCover();
+				getItemsConfirmPanel().setVisible(false);
+				resetDisplayItemDetails();
+			}
+		});
+	}
+
 	/**
 	 * Disables the button for dispensing change
 	 */
@@ -653,6 +748,10 @@ public class RegularView {
 		return itemButtons[12];
 	}
 	
+	public void hideRegVend() {
+		getRegVendFrame().setVisible(false);
+	}
+
 	/**
 	 * Returns the array of denomination buttons
 	 * @return denominationBtns

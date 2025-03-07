@@ -36,6 +36,11 @@ public class MainMenu{
 		vendSelection = null;
 		testSelection = null;
 		
+		this.createMenuFrame();
+		this.flllMenuFrame();
+	}
+
+	private void createMenuFrame(){
 		//attributes of the main menu frame
 		this.menuFrame = new JFrame("Main Menu");
 		this.menuFrame.setVisible(true);
@@ -46,7 +51,20 @@ public class MainMenu{
 		this.menuFrame.setLocationRelativeTo(null);
 		this.menuFrame.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 60));
 		
-		JPanel createPnl, testPnl, confirmPnl;
+	}
+	
+	private void flllMenuFrame(){
+		JPanel createPnl = createMenuCreateSection();
+		JPanel testPnl = createMenuTestSection();
+		JPanel confirmPnl = createMenuConfirmSection();
+		this.menuFrame.add(createPnl);
+		this.menuFrame.add(testPnl);
+		this.menuFrame.add(confirmPnl);
+		this.menuFrame.setVisible(true);
+	}
+
+	private JPanel createMenuCreateSection(){
+		JPanel createPnl;
 		
 		//contents of the create panel housing the options to create the type of VM
 		JLabel createLabel = new JLabel("Create VM:");
@@ -74,6 +92,10 @@ public class MainMenu{
 		createPnl.add(specialRB);
 		createPnl.add(createTypeConfirm);
 		
+		return createPnl;
+	}
+
+	private JPanel createMenuTestSection(){
 		//contents of the test panel housing the options to run which test for the VM
 		JLabel testLabel = new JLabel("Test Type: ");
 		testLabel.setFont(new Font("", Font.PLAIN, 18));
@@ -87,6 +109,8 @@ public class MainMenu{
 		this.testRBGroup = new ButtonGroup();
 		this.testRBGroup.add(featuresRB);
 		this.testRBGroup.add(maintenanceRB);
+
+		JPanel testPnl; 
 		
 		testPnl = new JPanel(new FlowLayout());
 		testPnl.setPreferredSize(new Dimension(FRAMEWIDTH, PANELHEIGHT));
@@ -94,7 +118,11 @@ public class MainMenu{
 		testPnl.add(testLabel);
 		testPnl.add(featuresRB);
 		testPnl.add(maintenanceRB);
-		
+
+		return testPnl;
+	}
+
+	private JPanel createMenuConfirmSection(){
 		//housing third layer including the option to exit program and confirm which type of test to run
 		this.exitButton = new JButton("Exit");
 		this.exitButton.setFocusable(false);
@@ -109,18 +137,16 @@ public class MainMenu{
 		this.confirmTestButton = new JButton("Test");
 		this.confirmTestButton.setFocusable(false);
 		this.confirmTestButton.setPreferredSize(new Dimension(100,50));
-		
+
+		JPanel confirmPnl;
+
 		confirmPnl = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0));
 		confirmPnl.setPreferredSize(new Dimension(300, 50));
 		//confirmPnl.setBackground(Color.BLUE);
 		confirmPnl.add(exitButton);
 		confirmPnl.add(confirmTestButton);
 		
-		
-		this.menuFrame.add(createPnl);
-		this.menuFrame.add(testPnl);
-		this.menuFrame.add(confirmPnl);
-		this.menuFrame.setVisible(true);
+		return confirmPnl;
 	}
 
 	/**

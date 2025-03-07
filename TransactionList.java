@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import Items.Item;
+
 public class TransactionList {
         private ArrayList<Item> item;
         private int timesRestocked;

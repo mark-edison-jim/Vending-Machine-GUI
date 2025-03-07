@@ -1,3 +1,5 @@
+import Items.Item;
+
 /**
  * This class handles the details of a single Transaction
  */
