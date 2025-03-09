@@ -434,6 +434,8 @@ public class SpecialGui extends RegularView{
         totalPayLabel.setText(Integer.toString(money));
     }
 
+    
+
     /**
      * Setter for the Jlabel of the total price of the transaction
      * @param money the new total price

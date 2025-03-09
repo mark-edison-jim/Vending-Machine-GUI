@@ -29,48 +29,48 @@ public class Maintenance{
 
 	// private SpecialModel specModel;
 	
-	private JFrame maintainanceFrame;
+	protected JFrame maintainanceFrame;
 	
-	private JPanel maintenanceOptionsPanel;
+	protected JPanel maintenanceOptionsPanel;
 	
-	private JPanel restockItemsPnl, changePricePnl, restockChangePnl, finalizingPanel, receiptPanel;
-	private JPanel collectEarningsPnl;
+	protected JPanel restockItemsPnl, changePricePnl, restockChangePnl, finalizingPanel, receiptPanel;
+	protected JPanel collectEarningsPnl;
 	
-	private JLabel restockItemsLabel, changePriceLabel, restockChangeLabel, lockedIconLabel, collectEarningsIdleText;
-	private JTextArea receiptTA;
+	protected JLabel restockItemsLabel, changePriceLabel, restockChangeLabel, lockedIconLabel, collectEarningsIdleText;
+	protected JTextArea receiptTA;
 	
-	private JComboBox<String> restockItemsCB, changePriceCB, restockChangeCB;
-	private JPanel restockItemsCBPanel, changePriceCBPanel, restockChangeCBPanel;
-	private JLabel restockItemsCurStockLbl, changePriceCurPriceLbl, restockChangeCurStockLbl;
+	protected JComboBox<String> restockItemsCB, changePriceCB, restockChangeCB;
+	protected JPanel restockItemsCBPanel, changePriceCBPanel, restockChangeCBPanel;
+	protected JLabel restockItemsCurStockLbl, changePriceCurPriceLbl, restockChangeCurStockLbl;
 	
-	private JTextField changePriceTF;
+	protected JTextField changePriceTF;
 	
-	private JButton backButton, restockItemsConfirm, changePriceConfirm, restockChangeConfirm, collectEarningsBtn, printRecieptBtn, receiptBackBtn;
+	protected JButton backButton, restockItemsConfirm, changePriceConfirm, restockChangeConfirm, collectEarningsBtn, printRecieptBtn, receiptBackBtn;
 	
-	private int restockItemsCountNumber;
-	private JPanel restockItemsCounterPnl;
-	private JButton restockItemsMinus, restockItemsPlus;
-	private JLabel restockItemsCounterDisplay;
+	protected int restockItemsCountNumber;
+	protected JPanel restockItemsCounterPnl;
+	protected JButton restockItemsMinus, restockItemsPlus;
+	protected JLabel restockItemsCounterDisplay;
 	
-	private int restockChangeCountNumber;
-	private JPanel restockChangeCounterPnl;
-	private JButton restockChangeMinus, restockChangePlus;
-	private JLabel restockChangeCounterDisplay;
+	protected int restockChangeCountNumber;
+	protected JPanel restockChangeCounterPnl;
+	protected JButton restockChangeMinus, restockChangePlus;
+	protected JLabel restockChangeCounterDisplay;
 	
 	private ImageIcon arrowLeft = new ImageIcon("assets/ArrowLeft.png"), lockIcon = new ImageIcon("assets/LockIcon.png");
 	
 	private final int StockLimit = 15;
 	private int timesRestocked = 0;
 
-	private boolean isSpecial;
+	protected boolean isSpecial;
 	
-	/**
-	 * Maintenance constructor instantiates its components and GUI of RVM
-	 * @param vendModel - the current model for logic and data of the vending machine
-	 */
+	private MaintenanceListeners maintenanceListeners;
+
 	public Maintenance(TransactionHandler transactionHandler, ItemHandler itemHandler) {
 		this.itemHandler = itemHandler;
 		this.transactionHandler = transactionHandler;
+		this.isSpecial = false;
+		this.maintenanceListeners = new MaintenanceListeners(this);
 		
 		//attributes of the Maintenance Frame
 		this.maintainanceFrame = new JFrame("Maintenance");
@@ -128,16 +128,11 @@ public class Maintenance{
 		this.maintainanceFrame.add(receiptPanel);
 	}
 
-	/**
-	 * Maintenance constructor instantiates its components and GUI of SVM
-	 * @param vendModel - the current model for logic and data of the vending machine
-	 * @param isSpecial
-	 */
 	public Maintenance(TransactionHandler transactionHandler, ItemHandler itemHandler, boolean isSpecial) {
 		this.itemHandler = itemHandler;
 		this.transactionHandler = transactionHandler;
 		this.isSpecial = isSpecial;
-
+		this.maintenanceListeners = new MaintenanceListeners(this);
 		//attributes of the Maintenance Frame
 		this.maintainanceFrame = new JFrame("Maintenance");
 		this.maintainanceFrame.setSize(820,830); //sets the x and y dimensions; size of maintainanceFrame
@@ -191,93 +186,14 @@ public class Maintenance{
 		this.maintainanceFrame.add(receiptPanel);
 	}
 	
-	/**
-	 * Assigns an action to the button for returning to the Main Menu
-	 * @param actionListener
-	 */
-	
-	public void setMaintenanceBackBtnActionListenener(ActionListener actionListener) {
-		this.backButton.addActionListener(actionListener);
+	public void initiateRegMaintenanceActionListeners(RegularView vendView, MainMenu menu, ItemHandler itemHandler,
+            TransactionHandler transactionHandler, Maintenance maintenance) {
+				maintenanceListeners.initiateRegMaintenanceActionListeners(vendView, menu, itemHandler, transactionHandler, maintenance);
 	}
-	
-	/**
-	 * Assigns an action/s to the ComboBox of the restocking of items
-	 * @param actionListener
-	 */
-	public void setRestockItemsCBActionListener(ActionListener actionListener) {
-		this.restockItemsCB.addActionListener(actionListener);
-	}
-	
-	/**
-	 * Assigns an action to the confirming of restocking an item button
-	 * @param actionListener
-	 */
-	public void setRestockItemsConfirmBtnActionListener(ActionListener actionListener) {
-		this.restockItemsConfirm.addActionListener(actionListener);
-	}
-	
-	/**
-	 * Assigns an action to the ComboBox of changing the price of an item
-	 * @param actionListener
-	 */
-	public void setChangePriceCBActionListener(ActionListener actionListener) {
-		this.changePriceCB.addActionListener(actionListener);
-	}
-	
-	/**
-	 * Assigns an action to the confirming of changing the price of an item button
-	 * @param actionListener
-	 */
-	public void setChangePriceConfirmBtnActionListener(ActionListener actionListener) {
-		this.changePriceConfirm.addActionListener(actionListener);
-	}
-	
-	/**
-	 * Assigns an action to the ComboBox of changing the stock of change
-	 * @param actionListener
-	 */
-	public void setRestockChangeCBActionListener(ActionListener actionListener) {
-		this.restockChangeCB.addActionListener(actionListener);
-	}
-	
-	/**
-	 * Assigns an action to the confirming of changing the stock of change button
-	 * @param actionListener
-	 */
-	public void setRestockChangeConfirmBtnActionListener(ActionListener actionListener) {
-		this.restockChangeConfirm.addActionListener(actionListener);
-	}
-	
-	/**
-	 * Assigns an action to the button to collect earnings
-	 * @param actionListener
-	 */
-	public void setCollectEarningsBtnActionListener(ActionListener actionListener) {
-		this.collectEarningsBtn.addActionListener(actionListener);
-	}
-	
-	/**
-	 * Assigns an action to the button to print the receipt
-	 * @param actionListener
-	 */
-	public void setPrintRecieptBtnActionListener(ActionListener actionListener) {
-		this.printRecieptBtn.addActionListener(actionListener);
-	}
-	
-	/**
-	 * Assigns an action to the text field of the change price
-	 * @param keyAdapter
-	 */
-	public void setTFKeyListener(KeyAdapter keyAdapter) {
-		this.changePriceTF.addKeyListener(keyAdapter);
-	}
-	
-	/**
-	 * Assigns an action to the button for returning to the Maintenance after printing the receipt
-	 * @param actionListener
-	 */
-	public void setReceiptBackBtnActionListener(ActionListener actionListener) {
-		this.receiptBackBtn.addActionListener(actionListener);
+
+	public void initiateSpecialMaintenanceActionListeners(SpecialGui vendView, MainMenu menu, ItemHandler itemHandler,
+            TransactionHandler transactionHandler, Maintenance maintenance) {
+				maintenanceListeners.initiateSpecialMaintenanceActionListeners(vendView, menu, itemHandler, transactionHandler, maintenance);
 	}
 	
 	/**
@@ -581,256 +497,6 @@ public class Maintenance{
 		this.getMTFrame().setVisible(false);
 	}
 
-	public void initiateRegMaintenanceActionListeners(RegularView vendView, MainMenu menu, ItemHandler itemHandler, TransactionHandler transactionHandler, Maintenance maintenance) {
-		this.setMaintenanceBackBtnActionListenener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				hideMaintenance();
-				menu.revealMainMenu();
-			}
-		});
-		
-		setRestockItemsConfirmBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				transactionHandler.printReceipt(itemHandler, maintenance);
-				int index = getRestockItemsCBSelectedIndex();
-				if(index==12) {
-					for(int i=0; i<itemHandler.getNumItems(); i++) {
-						itemHandler.addNewItemInstance(i, getRestockItemCount());
-						itemHandler.getItemRecord().get(i).addTotalRestock(getRestockItemCount());
-						if(i!=10 && i!=11) {
-							if(itemHandler.getSingleItemArrayList(i).size()>0)
-								vendView.enableBtn(i);
-						}
-						setRestockItemsCurStockLabel(String.format("Current Stock: %d", itemHandler.getSingleItemArrayList(i).size()));
-					}
-				}
-				else{
-					itemHandler.addNewItemInstance(index, getRestockItemCount());
-					itemHandler.getItemRecord().get(index).addTotalRestock(getRestockItemCount());
-					if(index!=10 && index!=11)
-						if(itemHandler.getSingleItemArrayList(index).size()>0)
-							vendView.enableBtn(index);
-					setRestockItemsCurStockLabel(String.format("Current Stock: %d", itemHandler.getSingleItemArrayList(index).size()));
-				}
-				for(int k = 0; k < itemHandler.getNumItems(); k++){
-					itemHandler.getItemRecord().get(k).setStartingStock(itemHandler.getSingleItemArrayList(k).size());
-                }
-				incrementTimesRestocked();
-				resetRestockItemsCounterDisplay();
-				System.out.println(itemHandler.getSingleItemArrayList(index));
-			}
-		});
-		
-		setRestockItemsCBActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setRestockItemsCurStockLabel(String.format("Current Stock: %d", itemHandler.getSingleItemArrayList(getRestockItemsCBSelectedIndex()).size()));
-			}
-		});
-		
-		setTFKeyListener(new KeyAdapter() {
-	         public void keyPressed(KeyEvent ke) {
-	            //String value = getChangePriceTF().getText();
-	            if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9' || ke.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
-	            	getChangePriceTF().setEditable(true);
-	            } else {
-	            	getChangePriceTF().setEditable(false);
-	                System.out.println("* Enter only numeric digits(0-9)");
-	            }
-	         }
-	      });
-		
-		setChangePriceConfirmBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				itemHandler.updateItemsPrice(getChangePriceCBSelectedIndex(), Integer.parseInt(getChangePriceTF().getText()));
-				resetChangePriceTextField();
-				setChangePriceCurPriceLabel(String.format("Current Price: $%d", itemHandler.getItemRecord().get(getChangePriceCBSelectedIndex()).getPrice()));
-				System.out.println(getChangePriceCBSelectedIndex());
-				System.out.println(getChangePriceTF().getText());
-			}
-		});
-		
-		setChangePriceCBActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setChangePriceCurPriceLabel(String.format("Current Price: $%d", itemHandler.getItemRecord().get(getChangePriceCBSelectedIndex()).getPrice()));
-			}
-		});
-		
-		setRestockChangeConfirmBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int index = getRestockChangeCBSelectedIndex();
-				transactionHandler.setChangeStockIndex(index, transactionHandler.getChangeStock()[index]+getRestockChangeCount());
-				resetRestockChangeCounterDisplay();
-				setRestockChangeCurStockLabel(String.format("Current Stock: %d", transactionHandler.getChangeStock()[getRestockChangeCBSelectedIndex()]));
-			}
-		});
-		
-		setRestockChangeCBActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setRestockChangeCurStockLabel(String.format("Current Stock: %d", transactionHandler.getChangeStock()[getRestockChangeCBSelectedIndex()]));
-			}
-		});
-		
-		setCollectEarningsBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setCollectEarningsText(String.format("$%d was collected", transactionHandler.collectEarnings()));
-				ActionListener listener = new ActionListener(){
-			        public void actionPerformed(ActionEvent event){
-			        	setCollectEarningsText("");
-			        }
-			    };
-				Timer timer = new Timer(2000, listener);
-			    timer.setRepeats(false);
-			    timer.start();
-			}
-		});
-		
-		setPrintRecieptBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showReceiptArea();
-				lockMaintenance();
-				setReceiptTextArea(transactionHandler.printReceipt(itemHandler, maintenance));
-			}
-		});
-		
-		setReceiptBackBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				hideReceiptArea();
-				unlockMaintenance();
-				setReceiptTextArea("");
-			}
-		});
-	}
-
-	/**
-     * This initiates action listeners for all the buttons of maintenance
-     */
-    public void initiateSpecialMaintenanceActionListeners(SpecialGui vendView, MainMenu menu, ItemHandler itemHandler, TransactionHandler transactionHandler, Maintenance maintenance) {
-		this.setMaintenanceBackBtnActionListenener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				hideMaintenance();
-                vendView.updateInfoLabel(itemHandler);
-				menu.revealMainMenu();
-			}
-		});
-		
-		this.setRestockItemsConfirmBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				transactionHandler.printReceipt(itemHandler, maintenance, isSpecial);
-				int index = maintenance.getRestockItemsCBSelectedIndex();
-				
-				itemHandler.addNewItemInstance(index, maintenance.getRestockItemCount());
-				itemHandler.getItemRecord().get(index).addTotalRestock(maintenance.getRestockItemCount());
-				maintenance.setRestockItemsCurStockLabel(String.format("Current Stock: %d", itemHandler.getSingleItemArrayList(index).size()));
-				
-                for(int k = 0; k < 12; k++){
-					itemHandler.getItemRecord().get(k).setStartingStock(itemHandler.getSingleItemArrayList(k).size());
-                }
-				maintenance.incrementTimesRestocked();
-				maintenance.resetRestockItemsCounterDisplay();
-				System.out.println(itemHandler.getSingleItemArrayList(index));
-			}
-		});
-		
-		this.setRestockItemsCBActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				maintenance.setRestockItemsCurStockLabel(String.format("Current Stock: %d", itemHandler.getSingleItemArrayList(maintenance.getRestockItemsCBSelectedIndex()).size()));
-			}
-		});
-		
-		this.setTFKeyListener(new KeyAdapter() {
-	         public void keyPressed(KeyEvent ke) {
-	            //String value = maintenance.getChangePriceTF().getText();
-	            if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9' || ke.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
-	            	maintenance.getChangePriceTF().setEditable(true);
-	            } else {
-	            	maintenance.getChangePriceTF().setEditable(false);
-	                System.out.println("* Enter only numeric digits(0-9)");
-	            }
-	         }
-	      });
-		
-		this.setChangePriceConfirmBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				itemHandler.updateItemsPrice(maintenance.getChangePriceCBSelectedIndex(), Integer.parseInt(maintenance.getChangePriceTF().getText()));
-				maintenance.resetChangePriceTextField();
-				maintenance.setChangePriceCurPriceLabel(String.format("Current Price: $%d", itemHandler.getItemRecord().get(maintenance.getChangePriceCBSelectedIndex()).getPrice()));
-				System.out.println(maintenance.getChangePriceCBSelectedIndex());
-				System.out.println(maintenance.getChangePriceTF().getText());
-                
-			}
-		});
-		
-		this.setChangePriceCBActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				maintenance.setChangePriceCurPriceLabel(String.format("Current Price: $%d", itemHandler.getItemRecord().get(maintenance.getChangePriceCBSelectedIndex()).getPrice()));
-			}
-		});
-		
-		this.setRestockChangeConfirmBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int index = maintenance.getRestockChangeCBSelectedIndex();
-				transactionHandler.setChangeStockIndex(index, transactionHandler.getChangeStock()[index]+maintenance.getRestockChangeCount());
-				maintenance.resetRestockChangeCounterDisplay();
-				maintenance.setRestockChangeCurStockLabel(String.format("Current Stock: %d", transactionHandler.getChangeStock()[maintenance.getRestockChangeCBSelectedIndex()]));
-			}
-		});
-		
-		this.setRestockChangeCBActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				maintenance.setRestockChangeCurStockLabel(String.format("Current Stock: %d", transactionHandler.getChangeStock()[maintenance.getRestockChangeCBSelectedIndex()]));
-			}
-		});
-		
-		this.setCollectEarningsBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				maintenance.setCollectEarningsText(String.format("$%d was collected", transactionHandler.collectEarnings()));
-				ActionListener listener = new ActionListener(){
-			        public void actionPerformed(ActionEvent event){
-			        	maintenance.setCollectEarningsText("");
-			        }
-			    };
-				Timer timer = new Timer(2000, listener);
-			    timer.setRepeats(false);
-			    timer.start();
-			}
-		});
-		
-		this.setPrintRecieptBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				maintenance.showReceiptArea();
-				maintenance.lockMaintenance();
-				maintenance.setReceiptTextArea(transactionHandler.printReceipt(itemHandler, maintenance, isSpecial));
-			}
-		});
-		
-		this.setReceiptBackBtnActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				maintenance.hideReceiptArea();
-				maintenance.unlockMaintenance();
-				maintenance.setReceiptTextArea("");
-			}
-		});
-	}
 	/**
 	 * Returns the frame of Maintenance
 	 * @return maintainanceFrame

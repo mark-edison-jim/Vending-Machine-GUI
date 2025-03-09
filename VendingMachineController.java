@@ -33,7 +33,9 @@ public class VendingMachineController {
 			this.itemHandler = new ItemHandler();
 			this.transacHandler = new TransactionHandler(vendView);
 			this.maintenance = new Maintenance(transacHandler, itemHandler);
+
 			regControl = new RegularFacade(menu, vendView, transacHandler, itemHandler, maintenance);
+
 			System.out.println(this.menu.getVendSelection());
 		}
 		// if selected RadioButton is the special VM
@@ -47,7 +49,9 @@ public class VendingMachineController {
 			this.itemHandler = new ItemHandler();
 			this.transacHandler = new TransactionHandler(specialVendView);
 			this.maintenance = new Maintenance(transacHandler, itemHandler);
+
 			this.specControl = new SpecialFacade(menu, specialVendView, itemHandler, transacHandler, maintenance);
+
 			System.out.println(this.menu.getVendSelection());
 		}
 			
@@ -122,7 +126,7 @@ public class VendingMachineController {
 		}
 		else System.out.println("Please Create a Vending Machine");
 	}
-
+	
 	private void deleteRegularVend(){
 		this.vendView = null;
 		this.itemHandler = null;

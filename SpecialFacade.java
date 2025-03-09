@@ -1,9 +1,4 @@
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
-import javax.swing.Timer;
-
 import java.awt.event.ActionEvent;
 
 /**
@@ -36,7 +31,7 @@ public class SpecialFacade {
 
         //adds all buttons visible in the buy menu
         setBuyButton();
-        maintenance.initiateSpecialMaintenanceActionListeners(specialGui, menu, itemHandler, transactionHandler, maintenance);;
+        maintenance.initiateSpecialMaintenanceActionListeners(specialGui, menu, itemHandler, transactionHandler, maintenance);
     }
     /**
      * This initiates action listener for the + buttons in special vending machine view
@@ -162,20 +157,23 @@ public class SpecialFacade {
                 }
                 
                 //resets the values for transaction
-                totalUserMoney = 0;
                 totalPrice = 0;
-                specialGui.resetBuyList();//resets basket
-                specialGui.resetItemLabel();//resets Gui basket
-                specialGui.setTotalPayment(0);//reset label
-                transactionHandler.resetPayment();//reset model payment
-                specialGui.setTotalPrice(0);//reset label
-                totalUserMoney = 0;
-                specialGui.updateInfoLabel(itemHandler);
+                resetTransacValues();
             }
         };
         return action;
     }
 
+
+    private void resetTransacValues(){
+        specialGui.resetBuyList();//resets basket
+        specialGui.resetItemLabel();//resets Gui basket
+        specialGui.setTotalPayment(0);//reset label
+        transactionHandler.resetPayment();//reset model payment
+        specialGui.setTotalPrice(0);//reset label
+        totalUserMoney = 0;
+        specialGui.updateInfoLabel(itemHandler);
+    }
     /**
      * This sets action listeners to all the buttons and Jlabels related to special vending machine
      */
@@ -201,13 +199,7 @@ public class SpecialFacade {
             public void actionPerformed(ActionEvent e)
             {
                 specialGui.hideSpecialGUI();
-                specialGui.resetBuyList();//resets basket
-                specialGui.resetItemLabel();//resets Gui basket
-                specialGui.setTotalPayment(0);//reset label
-                transactionHandler.resetPayment();//reset model payment
-                specialGui.setTotalPrice(0);//reset label
-                totalUserMoney = 0;
-                specialGui.updateInfoLabel(itemHandler);
+                resetTransacValues();
                 menu.revealMainMenu();
             }
 

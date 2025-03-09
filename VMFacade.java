@@ -7,14 +7,12 @@ public class VMFacade {
 	private MainMenu menu;
 	private VendingMachineController vendingMachineController;
 
-	/*
-	 * VendingMachineController constructor instantiating the main meny as well as its actions
-	 */
 	public VMFacade() {
 		this.menu = new MainMenu();
 		this.vendingMachineController = new VendingMachineController(menu);
 		assignAllBtnActions();
 	}
+
 	private void assignAllBtnActions(){
 		this.menu.setCreateTypeConfirmBtnActionListener(new ActionListener() {
 			@Override
